@@ -84,7 +84,7 @@ def first_minimal_name(humans:list[Human], current_temp: float) -> str:
             minimal_name = human.name
     return minimal_name
 
-print(first_minimal_name(humans = [human1, human2, human3, human4, human5],current_temp=23.0))
+#print(first_minimal_name(humans = [human1, human2, human3, human4, human5],current_temp=23.0))
 
 
 #    5.5) написать функцию, которая принимает массив людей и текущую температуру воздуха (float) и возвращает имя человека
@@ -145,4 +145,109 @@ def delete_minimal_maximal(humans: list[Human], current_temp: float) -> list[Hum
             result.append(human)
     return result
 
-print(delete_minimal_maximal([human1, human2, human3, human4, human5],current_temp=23.0))
+#print(delete_minimal_maximal([human1, human2, human3, human4, human5],current_temp=23.0))
+
+
+#5.8) написать функцию, которая принимает массив людей и текущую температуру воздуха (float) и возвращает уровень
+#    недовольства, который является минимальным без учета текущего мин. уровня недовольства (текущих минимальных уровней
+#   недовольства, если их несколько)
+
+def minimal_wo_current(humans: list[Human], current_temp: float) -> float|int:
+    minimal = None
+    next_minimal = None
+
+    for human in humans:
+        disp_value = human.calc_disp_value(current_temp)
+        if minimal is None or disp_value < minimal:
+            minimal = disp_value
+
+    for human in humans:
+        disp_value = human.calc_disp_value(current_temp)
+        if disp_value != minimal:
+            if next_minimal is None or disp_value < next_minimal:
+                next_minimal = disp_value
+
+    return next_minimal
+
+print(minimal_wo_current([human1, human2, human3, human4, human5],current_temp=23.0))
+
+#    5.9) написать функцию, которая принимает массив людей и текущую температуру воздуха (float) и возвращает суммарный
+#    уровень недовольства, без учета минимального (минимальных если их несколько)
+
+def sum_wo_minimal(humans: list[Human], current_temp: float) -> float|int:
+    total = 0
+    minimal = None
+
+    for human in humans:
+        disp_value = human.calc_disp_value(current_temp)
+        if minimal is None or disp_value < minimal:
+            minimal = disp_value
+
+    for human in humans:
+        disp_value = human.calc_disp_value(current_temp)
+        if disp_value != minimal:
+            total += disp_value
+
+    return total
+
+print(sum_wo_minimal([human1, human2, human3, human4, human5],current_temp=23.0))
+
+
+#5.10) написать функцию, которая принимает массив людей и текущую температуру воздуха (float) и возвращает среднее
+#    значение уровня недовольства, без учета максимального и минимального (максимальных и минимальных, если их несколько)
+
+def avg_disp(humans: list[Human], current_temp: float) -> float|int:
+    minimal = None
+    maximal = None
+    total = 0
+    count = 0
+
+    for human in humans:
+        disp_value = human.calc_disp_value(current_temp)
+        if minimal is None or disp_value < minimal:
+            minimal = disp_value
+
+        if maximal is None or disp_value > maximal:
+            maximal = disp_value
+
+    for human in humans:
+        disp_value = human.calc_disp_value(current_temp)
+        if disp_value != minimal and disp_value != maximal:
+            total += disp_value
+            count += 1
+
+    if count == 0:
+        return 0.0
+
+    return total / count
+
+print(avg_disp([human1, human2, human3, human4, human5],current_temp=23.0))
+
+#5.11) написать функцию, которая принимает массив людей и текущую температуру воздуха (float) и возвращает
+#     имя человека, уровень недовольства которого ближе всего к среднему. Если таких несколько, вернуть индекс
+#    первого встретившегося
+
+def closest_to_avg(humans: list[Human], current_temp: float) -> str:
+    total = 0
+    count = 0
+
+    for human in humans:
+        disp_value = human.calc_disp_value(current_temp)
+        total += disp_value
+        count += 1
+    avg = total / count
+    best_diff = 0
+    best_name = ''
+    for human in humans:
+        disp_value = human.calc_disp_value(current_temp)
+        diff = disp_value - avg
+        if diff < 0:
+            diff = -diff
+        if diff < best_diff:
+            best_diff = diff
+            best_name = human.name
+
+    return best_name
+
+
+print(closest_to_avg([human1, human2, human3, human4, human5],current_temp=23.0))
