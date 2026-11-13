@@ -35,3 +35,32 @@ def gcd_right(a: int, b: int) -> int:
 
 print(gcd_right(990000, 1000000))
 
+#8) Напиши функцию, которая принимает три целых числа и возвращает их НОД
+# (тоже самое, только теперь все три числа на него делятся). ИСПОЛЬЗУЙ ДЛЯ ВЫЧИСЛЕНИЙ ФУНКЦИЮ из п.7
+
+def gcd_three(a:int,b:int,c:int) -> int:
+    tmp = gcd_right(a,b)
+    return gcd_right(tmp,c)
+
+print(gcd_three(15,25,35))
+
+#9) Напиши функцию, которая принимает массив целых чисел и возвращает их НОД (все в массиве делятся на него).
+# ИСПОЛЬЗУЙ ДЛЯ ВЫЧИСЛЕНИЙ ФУНКЦИЮ из п.7
+
+def gcd_list(nums:list[int]) -> int:
+    result = nums[0]
+    for num in nums[1:]:
+        result = gcd_right(result, num)
+
+    return result
+print(gcd_list([15,25,35, 45, 95, 155, 185, 225, 300, 600]))
+
+#10) Напиши функцию, которая принимает массив массивов целых чисел (двумерный массив)
+# и возвращает НОД всех чисел во всех массивах. ИСПОЛЬЗУЙ ДЛЯ ВЫЧИСЛЕНИЙ ФУНКЦИЮ из п.9
+def gcd_2d_array(nums:list[list[int]]) -> int:
+    result = nums [0][0]
+    for row in nums:
+        for num in row:
+            result = gcd_right(result, num)
+    return result
+print(gcd_2d_array([[15, 25, 35, 45, 95, 155, 185, 225],[10, 5, 60, 90, 125]]))
