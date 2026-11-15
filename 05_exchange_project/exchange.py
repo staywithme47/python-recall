@@ -80,7 +80,7 @@ def get_portfolio_value(player: Player, assets: list[Asset]) -> float:
     return total
 
 
-def get_cheapest_asset(assets: list[Asset]) -> Asset:
+def get_cheapest_asset(assets: list[Asset]) -> Asset | None:
     cheapest_asset = None
 
     for asset in assets:
@@ -90,7 +90,7 @@ def get_cheapest_asset(assets: list[Asset]) -> Asset:
     return cheapest_asset
 
 
-def most_expensive_asset(assets: list[Asset]) -> Asset:
+def most_expensive_asset(assets: list[Asset]) -> Asset | None:
     expensive_asset = None
 
     for asset in assets:
@@ -111,3 +111,91 @@ def get_average_price(assets: list[Asset]) -> float:
 
     return avg /count
 
+
+def play_game():
+    player_name = input('Введите имя игрока:')
+    player = Player(name=player_name, cash= 1000.00, inventory={})
+
+    gold = Asset("Gold", 100.0)
+    oil = Asset("Oil", 50.0)
+    crypto = Asset("Crypto", 10.0)
+
+    assets = [gold, oil, crypto]
+
+    while True:
+        for asset in assets:
+            asset.update_price()
+            print(f"{asset.name} : {asset.price: .2f}$")
+        print(player.show_balance())
+        action_str = input("Выберите действие: \n 1. Купить актив  \n 2. Продать актив \n 3. Пропустить ход \n 4. Выйти из игры")
+        if not action_str.isdigit():
+            print("Ошибка, введите число!")
+            continue
+        action = int(action_str)
+        if action == 4:
+            break
+        elif action == 1:
+            user_choice = input("Какой актив вы хотите купить? ")
+            selected_asset = None
+
+            for a in assets:
+                if a.name.lower() == user_choice.lower():
+                    selected_asset = a
+                    break
+
+            if selected_asset is None:
+                print("Такого актива нет на рынке.")
+            else:
+                qty_str = input("Сколько единиц вы хотите купить? ")
+                if not qty_str.isdigit():
+                    print("Ошибка: нужно ввести число.")
+                    continue
+
+                qty = int(qty_str)
+                if qty <= 0:
+                    print("Количество должно быть больше нуля.")
+                else:
+                    if buy_asset(player, selected_asset, qty):
+                        print("Успешная покупка!")
+                    else:
+                        print("Недостаточно средств!")
+
+
+        elif action == 2:
+
+            user_choice = input("Какой актив вы хотите продать? ")
+
+            selected_asset = None
+
+            for a in assets:
+
+                if a.name.lower() == user_choice.lower():
+                    selected_asset = a
+
+                    break
+
+            if selected_asset is None:
+                print("Такого актива нет на рынке.")
+
+            else:
+                qty_str = input("Сколько единиц вы хотите продать? ")
+
+                if not qty_str.isdigit():
+                    print("Ошибка: нужно ввести число.")
+                    continue
+
+                qty = int(qty_str)
+
+                if qty <= 0:
+                    print("Количество должно быть больше нуля.")
+                else:
+                    if sell_asset(player, selected_asset, qty):
+                        print("Успешная продажа!")
+                    else:
+                        print("У вас нет столько единиц этого актива!")
+        elif action == 3:
+            print("Ход пропущен")
+
+
+if __name__ == "__main__":
+    play_game()
