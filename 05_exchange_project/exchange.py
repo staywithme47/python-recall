@@ -30,6 +30,7 @@ gold = Asset("Gold", 100.00)
 oil = Asset("Oil", 50.0)
 crypto = Asset("Crypto", 50.0)
 
+
 def buy_asset(player:Player, asset: Asset, quantity:int) -> bool:
 
     total = asset.price * quantity
@@ -42,9 +43,6 @@ def buy_asset(player:Player, asset: Asset, quantity:int) -> bool:
 
         return True
     return False
-
-
-print(buy_asset(gamer, gold, 5))
 
 
 def sell_asset(player: Player, asset: Asset, quantity : int) -> bool:
@@ -62,6 +60,54 @@ def sell_asset(player: Player, asset: Asset, quantity : int) -> bool:
 
     return True
 
-print(sell_asset(gamer, gold, 3))
 
+test_Gold = Asset("Gold", 100.00)
+test_oil = Asset("Oil", 50.0)
+test_crypto = Asset("Crypto", 10.0)
+test_player = Player(name="Tester", cash=500.00, inventory={"Gold": 2, "Crypto": 5})
+
+assets_list = [test_Gold, test_oil, test_crypto]
+
+def get_portfolio_value(player: Player, assets: list[Asset]) -> float:
+    total = 0
+
+    for item_name, qty in player.inventory.items():
+        for asset in assets:
+            if asset.name == item_name:
+                total += asset.price * qty
+
+    total += player.cash
+    return total
+
+
+def get_cheapest_asset(assets: list[Asset]) -> Asset:
+    cheapest_asset = None
+
+    for asset in assets:
+        if cheapest_asset is None or asset.price < cheapest_asset.price:
+            cheapest_asset = asset
+
+    return cheapest_asset
+
+
+def most_expensive_asset(assets: list[Asset]) -> Asset:
+    expensive_asset = None
+
+    for asset in assets:
+        if expensive_asset is None or asset.price > expensive_asset.price:
+            expensive_asset = asset
+
+    return expensive_asset
+
+
+def get_average_price(assets: list[Asset]) -> float:
+    avg = 0
+    count = 0
+    for asset in assets:
+        avg += asset.price
+        count += 1
+    if count == 0:
+        return 0.0
+
+    return avg /count
 
