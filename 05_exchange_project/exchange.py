@@ -63,3 +63,5 @@ def sell_asset(player: Player, asset: Asset, quantity : int) -> bool:
     return True
 
 print(sell_asset(gamer, gold, 3))
+
+
