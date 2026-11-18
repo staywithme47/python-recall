@@ -1,4 +1,7 @@
+import os.path
 import random
+import json
+
 
 class Player:
     def __init__(self, name:str, cash:float, inventory: dict):
@@ -23,12 +26,6 @@ class Asset:
         self.price = self.price * (1 + change)
         if self.price < 1.0:
             self.price = 1.0
-
-
-gamer = Player('Иван', 1000.00, {})
-gold = Asset("Gold", 100.00)
-oil = Asset("Oil", 50.0)
-crypto = Asset("Crypto", 50.0)
 
 
 def buy_asset(player:Player, asset: Asset, quantity:int) -> bool:
@@ -60,13 +57,6 @@ def sell_asset(player: Player, asset: Asset, quantity : int) -> bool:
 
     return True
 
-
-test_Gold = Asset("Gold", 100.00)
-test_oil = Asset("Oil", 50.0)
-test_crypto = Asset("Crypto", 10.0)
-test_player = Player(name="Tester", cash=500.00, inventory={"Gold": 2, "Crypto": 5})
-
-assets_list = [test_Gold, test_oil, test_crypto]
 
 def get_portfolio_value(player: Player, assets: list[Asset]) -> float:
     total = 0
@@ -112,15 +102,43 @@ def get_average_price(assets: list[Asset]) -> float:
     return avg /count
 
 
+def create_new_game(player_name):
+    player = Player(name=player_name, cash=1000.00, inventory={})
+    assets = [Asset("Gold", 100.00), Asset("Oil", 50.0), Asset("Crypto", 10.0)]
+    return player, assets
+
+
+def save_game(player: Player, assets:list[Asset], filename = "savegame.json"):
+    player_data = {"name": player.name, "cash": player.cash, "inventory" : player.inventory}
+    inventory_assets = [{"name": x.name, "price": x.price} for x in assets]
+    full_data = {"player": player_data, "assets": inventory_assets}
+    with open(filename, 'w', encoding='utf-8') as f:
+        json.dump(full_data, f)
+    return True
+
+
+def load_game(filename: str) -> tuple[Player, list[Asset]]:
+    with open(filename, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    player = Player(name= data["player"]["name"], cash= data["player"]["cash"], inventory= data["player"]["inventory"])
+    assets = [Asset(name=x["name"], price=x["price"]) for x in data["assets"]]
+
+    return player, assets
+
+
 def play_game():
     player_name = input('Введите имя игрока:')
-    player = Player(name=player_name, cash= 1000.00, inventory={})
+    save_file = f"{player_name}.json"
 
-    gold = Asset("Gold", 100.0)
-    oil = Asset("Oil", 50.0)
-    crypto = Asset("Crypto", 10.0)
+    if os.path.exists(save_file):
+        ans = input("Найдено сохранение. Загрузить? (y/n): ")
+        if ans.lower() == "y":
+            player, assets = load_game(save_file)
 
-    assets = [gold, oil, crypto]
+        else:
+            player, assets = create_new_game(player_name)
+    else:
+        player,assets = create_new_game(player_name)
 
     while True:
         for asset in assets:
@@ -133,6 +151,11 @@ def play_game():
             continue
         action = int(action_str)
         if action == 4:
+            user_answer = input("Хотите сохранить прогресс: Y/N?")
+            if user_answer.lower() == "y":
+                save_game(player, assets, filename=save_file)
+                print("Сохранено успешно")
+            print("Выходим из игры")
             break
         elif action == 1:
             user_choice = input("Какой актив вы хотите купить? ")
