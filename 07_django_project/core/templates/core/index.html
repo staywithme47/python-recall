@@ -13,10 +13,12 @@
     <h2> Активы на бирже </h2>
     <ul>
         {% for asset in assets%}
-        <li>{{asset.name}} стоит {{asset.price}}</li>
-        {%empty%}
-        <li>Пока нет ни одного актива.</li>
-
+        <li>
+            <a href="{% url 'asset_detail' asset.id%}">
+                {{ asset.name }}
+            </a>
+            стоит {{ asset.price }}
+        </li>
         {%endfor%}
     </ul>
 

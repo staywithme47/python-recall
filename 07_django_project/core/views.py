@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Asset
 from .forms import AssetForm
+
 # Create your views here.
 
 def index(request):
@@ -22,3 +23,11 @@ def index(request):
 
 
     return render(request, 'core/index.html', context)
+
+def asset_detail(request, asset_id: int):
+    asset = get_object_or_404(Asset, id= asset_id)
+
+    context = {
+        'asset' : asset
+    }
+    return render(request, 'core/asset_detail.html', context)

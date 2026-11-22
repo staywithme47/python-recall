@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+    <head><title>{{ asset.name }}</title></head>
+    <body>
+        <h1>Актив: {{ asset.name }}</h1>
+        <p>Текущая цена: {{ asset.price }}$</p>
+
+        <a href="{% url 'index' %}">← Назад на главную</a>
+    </body>
+</html>
