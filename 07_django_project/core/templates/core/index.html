@@ -19,6 +19,13 @@
 
         {%endfor%}
     </ul>
+
+    <h2> Добавить актив</h2>
+    <form method = "POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
 </body>
 </html>
 

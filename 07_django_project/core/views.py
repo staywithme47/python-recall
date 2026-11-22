@@ -1,13 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Asset
+from .forms import AssetForm
 # Create your views here.
 
 def index(request):
+    if request.method == 'POST':
+        form = AssetForm(request.POST)
+        if form.is_valid():
+
+            form.save()
+            return redirect('index')
+    else:
+        form = AssetForm()
     assets = Asset.objects.all()
     context = {
         'username' : "Иван",
-        'assets' : assets
+        'assets' : assets,
+        'form' : form,
     }
 
 
