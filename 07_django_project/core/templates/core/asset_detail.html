@@ -4,7 +4,9 @@
     <body>
         <h1>Актив: {{ asset.name }}</h1>
         <p>Текущая цена: {{ asset.price }}$</p>
-
+        <a href="{% url 'asset_update' asset.id %}">
+            <button>Редактировать актив</button>
+        </a>
         <a href="{% url 'index' %}">← Назад на главную</a>
     </body>
 </html>

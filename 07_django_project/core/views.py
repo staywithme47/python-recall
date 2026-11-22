@@ -31,3 +31,21 @@ def asset_detail(request, asset_id: int):
         'asset' : asset
     }
     return render(request, 'core/asset_detail.html', context)
+
+
+def asset_update(request, asset_id: int):
+    asset = get_object_or_404(Asset, id= asset_id)
+
+    if request.method == 'POST':
+        form = AssetForm(request.POST, instance=asset)
+        if form.is_valid():
+            form.save()
+            return redirect('asset_detail', asset_id = asset.id)
+    else:
+        form = AssetForm(instance=asset)
+
+    context = {
+        'form' : form,
+        'asset' : asset,
+    }
+    return render(request, 'core/asset_form.html', context)
