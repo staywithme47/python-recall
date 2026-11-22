@@ -3,4 +3,7 @@ from django.http import HttpResponse
 # Create your views here.
 
 def index(request):
-    return HttpResponse("Hello World, It's my first django web")
+    context = {
+        'username' : "Иван",
+    }
+    return render(request, 'core/index.html', context)
