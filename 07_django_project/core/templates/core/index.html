@@ -8,6 +8,17 @@
 <body>
     <h1> Привет, {{username}}! </h1>
     <p> Это мой первый шаблон в Django. </p>
+
+
+    <h2> Активы на бирже </h2>
+    <ul>
+        {% for asset in assets%}
+        <li>{{asset.name}} стоит {{asset.price}}</li>
+        {%empty%}
+        <li>Пока нет ни одного актива.</li>
+
+        {%endfor%}
+    </ul>
 </body>
 </html>
 
