@@ -1,19 +1,9 @@
-<!DOCTYPE html>
-<html lang = "ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Моя биржа</title>
-</head>
-
-<body>
-    <h1> Привет, {{username}}! </h1>
-    <p> Это мой первый шаблон в Django. </p>
-
-
+{% extends 'core/base.html' %}
+{% block content %}
     <h2> Активы на бирже </h2>
-    <ul>
+    <ul class="list-group">
         {% for asset in assets%}
-        <li>
+        <li class="list-group-item">
             <a href="{% url 'asset_detail' asset.id%}">
                 {{ asset.name }}
             </a>
@@ -23,11 +13,11 @@
     </ul>
 
     <h2> Добавить актив</h2>
-    <form method = "POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Сохранить</button>
-    </form>
-</body>
-</html>
-
+    <div class="card p-3 mt-4">
+        <form method = "POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success mt-3">Сохранить</button>
+        </form>
+    </div>
+{% endblock %}
