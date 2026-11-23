@@ -49,3 +49,13 @@ def asset_update(request, asset_id: int):
         'asset' : asset,
     }
     return render(request, 'core/asset_form.html', context)
+
+
+def asset_delete(request, asset_id:int):
+    asset = get_object_or_404(Asset, id=asset_id)
+
+    if request.method == 'POST':
+        asset.delete()
+        return redirect('index')
+
+    return redirect('asset_detail', asset_id =asset.id)

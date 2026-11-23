@@ -7,6 +7,13 @@
         <a href="{% url 'asset_update' asset.id %}">
             <button>Редактировать актив</button>
         </a>
+        <form action="{% url 'asset_delete' asset.id %}" method="POST" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('Вы уверены, что хотите удалить этот актив?');">
+            Удалить
+            </button>
+        </form>
         <a href="{% url 'index' %}">← Назад на главную</a>
+
     </body>
 </html>
