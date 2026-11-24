@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from .models import Asset
 from .forms import AssetForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
+from .forms import AssetForm, RegisterForm
 
 
 @login_required
@@ -66,3 +68,16 @@ def asset_delete(request, asset_id:int):
         return redirect('index')
 
     return redirect('asset_detail', asset_id =asset.id)
+
+
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('index')
+
+    else:
+        form = RegisterForm()
+    return render(request, 'core/register.html', {'form' : form })
