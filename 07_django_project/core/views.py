@@ -1,20 +1,23 @@
+from django.db.models import Model
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Asset
 from .forms import AssetForm
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
 
+@login_required
 def index(request):
     if request.method == 'POST':
         form = AssetForm(request.POST)
         if form.is_valid():
-
-            form.save()
+            asset = form.save(commit=False)
+            asset.owner = request.user
+            asset.save()
             return redirect('index')
     else:
         form = AssetForm()
-    assets = Asset.objects.all()
+    assets = Asset.objects.filter(owner=request.user)
     context = {
         'username' : "Иван",
         'assets' : assets,
@@ -24,6 +27,8 @@ def index(request):
 
     return render(request, 'core/index.html', context)
 
+
+@login_required
 def asset_detail(request, asset_id: int):
     asset = get_object_or_404(Asset, id= asset_id)
 
@@ -33,6 +38,7 @@ def asset_detail(request, asset_id: int):
     return render(request, 'core/asset_detail.html', context)
 
 
+@login_required
 def asset_update(request, asset_id: int):
     asset = get_object_or_404(Asset, id= asset_id)
 
@@ -51,6 +57,7 @@ def asset_update(request, asset_id: int):
     return render(request, 'core/asset_form.html', context)
 
 
+@login_required
 def asset_delete(request, asset_id:int):
     asset = get_object_or_404(Asset, id=asset_id)
 
